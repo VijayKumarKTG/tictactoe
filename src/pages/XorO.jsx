@@ -1,12 +1,20 @@
 import React from 'react';
 import Button from '../components/Button';
+import X from '../components/X';
+import O from '../components/O';
 
-function XorO(){
+function XorO({ setStep, index }) {
   return (
-    <div>
-      <p>X or O ?</p>
-      <Button text=" X "/>
-      <Button text=" O "/>
+    <div className='tab'>
+      <p>
+        What would you like, <X /> 🥊 <O /> ?
+      </p>
+      <div className='btn_container'>
+        <Button text=' X ' click={() => setStep(index + 1)} />
+        <Button text=' O ' click={() => setStep(index + 1)} />
+      </div>
     </div>
-  )
+  );
 }
+
+export default XorO;

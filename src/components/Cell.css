@@ -1,0 +1,15 @@
+.cell {
+  width: 80px;
+  height: 80px;
+  border: 1px solid aliceblue;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cell:hover {
+  border: 2px solid #ffff7e;
+  background-color: #cff3fa49;
+}

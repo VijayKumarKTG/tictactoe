@@ -1,0 +1,10 @@
+.tab {
+  border: 1px solid aliceblue;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.btn_container {
+  display: flex;
+  justify-content: space-between;
+}

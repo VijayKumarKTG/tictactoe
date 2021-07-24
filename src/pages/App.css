@@ -1,0 +1,21 @@
+main {
+  text-align: center;
+}
+
+.slideIn-enter {
+  transform: translateY(100);
+}
+
+.slideIn-enter-active {
+  transform: translateY(0);
+  transition: transform 300ms;
+}
+
+.slideIn-exit {
+  transform: translateY(0);
+}
+
+.slideIn-exit-active {
+  transform: translateY(-1000);
+  transition: transform 300ms;
+}

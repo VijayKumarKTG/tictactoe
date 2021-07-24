@@ -1,0 +1,10 @@
+.board_container {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: center;
+}

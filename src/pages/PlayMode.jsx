@@ -1,14 +1,20 @@
 import React from 'react';
+import './PlayMode.css';
 import Button from '../components/Button';
+import Logo from '../components/Logo';
 
-function PlayMode(){
+function PlayMode({ setStep, index }) {
   return (
-    <div>
-      <p>Single player or double player?</p>
-      <Button text="Single Player"/>
-      <Button text="Double Player"/>
+    <div className='tab'>
+      <Logo />
+      <p>Welcome to your tic-tac-toe board! 👋</p>
+      <p>Choose, single player or double player?</p>
+      <div className='btn_container'>
+        <Button text='Single player' click={() => setStep(index + 1)} />
+        <Button text='Double player' click={() => setStep(index + 1)} />
+      </div>
     </div>
-  )
+  );
 }
 
 export default PlayMode;
