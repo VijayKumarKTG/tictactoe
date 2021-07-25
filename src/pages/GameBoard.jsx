@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './GameBoard.css';
 import Cell from '../components/Cell';
 import Logo from '../components/Logo';
 import X from '../components/X';
 import O from '../components/O';
+import Button from '../components/Button';
 
-function Board() {
-  let cellVals = [null, null, 'X', null, null, 'O', null, null, null];
-  let keys = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+function Board({ addValueToCell, reset, playMode, cellVals }) {
   return (
-    <div className='board_container'>
+    <div className='tab board_container'>
       <Logo />
+      {playMode === 'single' ? (
+        <p>
+          <span>You</span> Vs <span>Computer</span>
+        </p>
+      ) : (
+        <p>
+          <span>Player 1</span> Vs <span>Player 2</span>
+        </p>
+      )}
       <p>
         <span>
           <X /> : 1
@@ -22,9 +30,10 @@ function Board() {
       </p>
       <div className='board'>
         {cellVals.map((cellVal, i) => (
-          <Cell key={keys[i]} value={cellVal} />
+          <Cell key={i} value={cellVal} addCellVal={() => addValueToCell(i)} />
         ))}
       </div>
+      <Button text='Reset' click={reset} />
     </div>
   );
 }

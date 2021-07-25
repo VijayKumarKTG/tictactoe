@@ -1,6 +1,7 @@
 .board_container {
   font-size: xx-large;
   font-weight: bold;
+  border: none;
 }
 
 .board {

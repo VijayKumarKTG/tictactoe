@@ -3,15 +3,15 @@ import Button from '../components/Button';
 import X from '../components/X';
 import O from '../components/O';
 
-function XorO({ setStep, index }) {
+function XorO({ chooseXorO }) {
   return (
     <div className='tab'>
       <p>
         What would you like, <X /> 🥊 <O /> ?
       </p>
       <div className='btn_container'>
-        <Button text=' X ' click={() => setStep(index + 1)} />
-        <Button text=' O ' click={() => setStep(index + 1)} />
+        <Button text=' X ' click={() => chooseXorO('X')} />
+        <Button text=' O ' click={() => chooseXorO('O')} />
       </div>
     </div>
   );

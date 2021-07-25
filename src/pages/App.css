@@ -1,21 +1,29 @@
 main {
   text-align: center;
+  overflow: hidden;
 }
 
-.slideIn-enter {
-  transform: translateY(100);
+.slideIn-enter .tab {
+  opacity: 0;
+  transform: translateY(100%);
 }
 
-.slideIn-enter-active {
-  transform: translateY(0);
-  transition: transform 300ms;
+.slideIn-enter-active .tab {
+  opacity: 1;
+  transform: translateY(0%);
 }
 
-.slideIn-exit {
-  transform: translateY(0);
+.slideIn-exit .tab {
+  opacity: 1;
+  transform: translateY(0%);
 }
 
-.slideIn-exit-active {
-  transform: translateY(-1000);
-  transition: transform 300ms;
+.slideIn-exit-active .tab {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+.slideIn-enter-active .tab,
+.slideIn-exit-active .tab {
+  transition: opacity 500ms, transform 500ms;
 }
