@@ -5,7 +5,7 @@ import O from '../components/O';
 
 function Cell(props) {
   return (
-    <div className='cell' onClick={props.addCellVal}>
+    <div className='cell' onClick={props.value ? null : props.addCellVal}>
       {props.value ? props.value === 'X' ? <X /> : <O /> : ''}
     </div>
   );

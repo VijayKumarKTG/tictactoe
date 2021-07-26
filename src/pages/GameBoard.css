@@ -9,3 +9,7 @@
   grid-template-columns: repeat(3, max-content);
   justify-content: center;
 }
+
+.status {
+  font-size: 1rem;
+}
