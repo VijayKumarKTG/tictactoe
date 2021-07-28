@@ -24,6 +24,7 @@ function App() {
   const [cellChangeCount, setCellChangeCount] = useState(0);
   const [winnerVal, setWinnerVal] = useState('');
   const [status, setStatus] = useState([false, false]);
+  const [playerTurn, setPlayerTurn] = useState(Math.floor(Math.random() * 2));
 
   const choosePlayMode = (mode) => {
     setPlayMode(mode);
@@ -38,21 +39,28 @@ function App() {
   const addValueToCell = (index) => {
     if (!winnerVal) {
       setCellVals(() => {
-        let newCellVals = cellVals.map((val, i) => (index === i ? xoro : val));
-        if (checkXorO(newCellVals, 'X')) {
-          setWinnerVal('X');
-          setStatus(xoro === 'X' ? [true, false] : [false, true]);
-        }
-        if (checkXorO(newCellVals, 'O')) {
-          setWinnerVal('O');
-          setStatus(xoro === 'O' ? [true, false] : [false, true]);
+        let newCellVals = cellVals.map((val, i) =>
+          index === i ? (playerTurn === 0 ? 'X' : 'O') : val
+        );
+        let checkForX = checkXorO(newCellVals, 'X'),
+          checkForO = checkXorO(newCellVals, 'O');
+        if (!newCellVals.includes(null) && !checkForO && !checkForX) {
+          setWinnerVal('draw');
+          setStatus([true, true]);
+        } else {
+          if (checkForX) {
+            setWinnerVal('X');
+            setStatus(xoro === 'X' ? [true, false] : [false, true]);
+          }
+          if (checkForO) {
+            setWinnerVal('O');
+            setStatus(xoro === 'O' ? [true, false] : [false, true]);
+          }
         }
         return newCellVals;
       });
-      setXorO(xoro === 'X' ? 'O' : 'X');
-      setCellChangeCount(
-        cellChangeCount < 10 ? cellChangeCount + 1 : cellChangeCount
-      );
+      setPlayerTurn(playerTurn === 0 ? 1 : 0);
+      setCellChangeCount(cellChangeCount + 1);
     }
   };
 
@@ -64,6 +72,7 @@ function App() {
     setCellChangeCount(0);
     setWinnerVal('');
     setStatus([false, false]);
+    setPlayerTurn(Math.floor(Math.random() * 2));
   };
 
   const checkXorO = (array, value) => {
@@ -109,6 +118,8 @@ function App() {
                   playMode={playMode}
                   cellVals={cellVals}
                   status={status}
+                  playerTurn={playerTurn}
+                  player1Choice={xoro}
                 />
               )}
             </Wrapper>

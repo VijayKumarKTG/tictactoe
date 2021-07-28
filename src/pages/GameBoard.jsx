@@ -6,28 +6,38 @@ import X from '../components/X';
 import O from '../components/O';
 import Button from '../components/Button';
 
-function Board({ addValueToCell, reset, playMode, cellVals, status }) {
+function Board({
+  addValueToCell,
+  reset,
+  playMode,
+  cellVals,
+  status,
+  playerTurn,
+  player1Choice,
+}) {
   let winStatus;
-  console.log(status);
+  let xoro = playerTurn === 0 ? 'X' : 'O';
   if (playMode === 'single') {
-    if (status[0]) {
+    if (status[0] && !status[1]) {
       winStatus = <p className='status'>You beat the beast, Computer!</p>;
-    } else {
+    } else if (!status[0] && status[1]) {
       winStatus = (
         <p className='status'>
           It is not easy to defeat the Computer but you can do it!
         </p>
       );
+    } else if (status[0] && status[1]) {
+      winStatus = <p className='status'>It is a draw! :)</p>;
     }
   } else {
-    if (status[0]) {
+    if (status[0] && !status[1]) {
       winStatus = (
         <div className='status'>
           <p>Player 1, you surely win this time! Congrats!</p>
           <p>Don't worry Player 2! Make sure to win next time!</p>
         </div>
       );
-    } else {
+    } else if (!status[0] && status[1]) {
       winStatus = (
         <div className='status'>
           <p>Player 2, you are indeed a true tic-tac-toe hero.</p>
@@ -36,6 +46,8 @@ function Board({ addValueToCell, reset, playMode, cellVals, status }) {
           </p>
         </div>
       );
+    } else if (status[0] && status[1]) {
+      winStatus = <p className='status'>It is a draw! :)</p>;
     }
   }
 
@@ -44,11 +56,21 @@ function Board({ addValueToCell, reset, playMode, cellVals, status }) {
       <Logo />
       {playMode === 'single' ? (
         <p>
-          <span>You</span> Vs <span>Computer</span>
+          <span className={xoro === player1Choice ? 'active' : null}>You</span>{' '}
+          Vs{' '}
+          <span className={xoro !== player1Choice ? 'active' : null}>
+            Computer
+          </span>
         </p>
       ) : (
         <p>
-          <span>Player 1</span> Vs <span>Player 2</span>
+          <span className={xoro === player1Choice ? 'active' : null}>
+            Player 1
+          </span>{' '}
+          Vs{' '}
+          <span className={xoro !== player1Choice ? 'active' : null}>
+            Player 2
+          </span>
         </p>
       )}
       <p>
