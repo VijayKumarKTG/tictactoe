@@ -8,12 +8,14 @@ import Button from '../components/Button';
 
 function Board({
   addValueToCell,
+  playAgain,
   reset,
   playMode,
   cellVals,
   status,
   playerTurn,
   player1Choice,
+  points,
 }) {
   let winStatus;
   let xoro = playerTurn === 0 ? 'X' : 'O';
@@ -75,11 +77,11 @@ function Board({
       )}
       <p>
         <span>
-          <X /> : 1
+          <X /> : {points[0]}
         </span>{' '}
         🥊{' '}
         <span>
-          <O /> : 1
+          <O /> : {points[1]}
         </span>
       </p>
       {status.includes(true) && winStatus}
@@ -88,7 +90,10 @@ function Board({
           <Cell key={i} value={cellVal} addCellVal={() => addValueToCell(i)} />
         ))}
       </div>
-      <Button text='Reset' click={reset} />
+      <div className='btn_container' style={{ marginTop: '20px' }}>
+        <Button text='Play again' click={playAgain} />
+        <Button text='Reset' click={reset} />
+      </div>
     </div>
   );
 }

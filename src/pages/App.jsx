@@ -25,6 +25,7 @@ function App() {
   const [winnerVal, setWinnerVal] = useState('');
   const [status, setStatus] = useState([false, false]);
   const [playerTurn, setPlayerTurn] = useState(Math.floor(Math.random() * 2));
+  const [points, setPoints] = useState([0, 0]);
 
   const choosePlayMode = (mode) => {
     setPlayMode(mode);
@@ -51,10 +52,20 @@ function App() {
           if (checkForX) {
             setWinnerVal('X');
             setStatus(xoro === 'X' ? [true, false] : [false, true]);
+            setPoints(
+              xoro === 'X'
+                ? [points[0] + 1, points[1]]
+                : [points[0], points[1] + 1]
+            );
           }
           if (checkForO) {
             setWinnerVal('O');
             setStatus(xoro === 'O' ? [true, false] : [false, true]);
+            setPoints(
+              xoro === 'O'
+                ? [points[0] + 1, points[1]]
+                : [points[0], points[1] + 1]
+            );
           }
         }
         return newCellVals;
@@ -62,6 +73,14 @@ function App() {
       setPlayerTurn(playerTurn === 0 ? 1 : 0);
       setCellChangeCount(cellChangeCount + 1);
     }
+  };
+
+  const playAgain = () => {
+    setCellVals([null, null, null, null, null, null, null, null, null]);
+    setCellChangeCount(0);
+    setWinnerVal('');
+    setStatus([false, false]);
+    setPlayerTurn(Math.floor(Math.random() * 2));
   };
 
   const reset = () => {
@@ -73,6 +92,7 @@ function App() {
     setWinnerVal('');
     setStatus([false, false]);
     setPlayerTurn(Math.floor(Math.random() * 2));
+    setPoints([0, 0]);
   };
 
   const checkXorO = (array, value) => {
@@ -114,12 +134,14 @@ function App() {
               ) : (
                 <Board
                   addValueToCell={addValueToCell}
+                  playAgain={playAgain}
                   reset={reset}
                   playMode={playMode}
                   cellVals={cellVals}
                   status={status}
                   playerTurn={playerTurn}
                   player1Choice={xoro}
+                  points={points}
                 />
               )}
             </Wrapper>
