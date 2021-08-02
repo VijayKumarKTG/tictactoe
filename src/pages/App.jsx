@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Wrapper from '../components/Wrapper';
 import PlayMode from './PlayMode';
@@ -7,27 +7,38 @@ import Board from './GameBoard';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 
 function App() {
-  const [currentStep, setStep] = useState(0);
+  const [step, setStep] = useState(0);
   const [playMode, setPlayMode] = useState('');
-  const [xoro, setXorO] = useState('');
-  const [cellVals, setCellVals] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-  const [cellChangeCount, setCellChangeCount] = useState(0);
-  const [winnerVal, setWinnerVal] = useState('');
-  const [status, setStatus] = useState([false, false]);
-  const [playerTurn, setPlayerTurn] = useState(Math.floor(Math.random() * 2));
-  const [points, setPoints] = useState([0, 0]);
+  const [playersSign, setPlayerSigns] = useState([]);
+  const [gameData, setGameData] = useState({
+    cellVals: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    winner: '',
+    status: [false, false],
+    playerTurn: Math.floor(Math.random() * 2),
+    points: [0, 0],
+  });
+
+  useEffect(() => {
+    if (
+      gameData.playerTurn === 1 &&
+      playMode === 'single' &&
+      playersSign.length
+    ) {
+      setTimeout(singlePlayerAddCell, 2000);
+    }
+  }, [playersSign, gameData, playMode]);
 
   const choosePlayMode = (mode) => {
     setPlayMode(mode);
-    setStep(currentStep + 1);
+    setStep(step + 1);
   };
 
-  const chooseXorO = (sign) => {
-    setXorO(sign);
-    setStep(currentStep + 1);
+  const chooseSymbols = (sign) => {
+    setPlayerSigns(() => (sign === 'X' ? ['X', 'O'] : ['O', 'X']));
+    setStep(step + 1);
   };
 
-  const checkXorO = (array, value) => {
+  const checkWinner = (array, value) => {
     if (
       (array[0] === value && array[1] === value && array[2] === value) ||
       (array[3] === value && array[4] === value && array[5] === value) ||
@@ -43,181 +54,156 @@ function App() {
     return false;
   };
 
-  const singlePlayerAddCell = () => {
-    let player = playerTurn === 0 ? xoro : xoro === 'X' ? 'O' : 'X';
-    let obj = minimax([...cellVals], player);
-    addValueToCell(obj.index);
+  const addValueToCell = (index) => {
+    let newGameData = { ...gameData };
+    if (!gameData.winner) {
+      setGameData(() => {
+        let newCellVals;
+        newCellVals = gameData.cellVals.map((val, i) =>
+          index === i ? playersSign[gameData.playerTurn] : val
+        );
+        let isWinnerX = checkWinner(newCellVals, 'X'),
+          isWinnerO = checkWinner(newCellVals, 'O');
+        if (!newCellVals.join('').match(/\d/g) && !isWinnerX && !isWinnerO) {
+          newGameData.winner = 'draw';
+          newGameData.status = [true, true];
+        } else {
+          if (isWinnerX) {
+            newGameData.winner = 'X';
+            newGameData.status =
+              playersSign[0] === 'X' ? [true, false] : [false, true];
+            newGameData.points =
+              playersSign[0] === 'X'
+                ? [gameData.points[0] + 1, gameData.points[1]]
+                : [gameData.points[0], gameData.points[1] + 1];
+          }
+          if (isWinnerO) {
+            newGameData.winner = 'O';
+            newGameData.status =
+              playersSign[0] === 'O' ? [true, false] : [false, true];
+            newGameData.points =
+              playersSign[0] === 'O'
+                ? [gameData.points[0] + 1, gameData.points[1]]
+                : [gameData.points[0], gameData.points[1] + 1];
+          }
+        }
+        newGameData.playerTurn = gameData.playerTurn === 0 ? 1 : 0;
+        newGameData.cellVals = newCellVals;
+        return newGameData;
+      });
+    }
   };
 
-  // the main minimax function
-  function minimax(newBoard, player) {
-    let huPlayer = xoro;
-    let aiPlayer = xoro === 'X' ? 'O' : 'X';
-    //add one to function calls
-    //fc++;
+  const singlePlayerAddCell = () => {
+    let player = playersSign[gameData.playerTurn];
+    let { index } = minimax([...gameData.cellVals], player);
+    addValueToCell(index);
+  };
 
-    //available spots
+  const minimax = (newBoard, player) => {
+    // Get human player and AI player
+
+    let huPlayer = playersSign[0];
+    let aiPlayer = playersSign[1];
+
+    // Extract all the available cells on the board
     var availSpots = emptyIndexies(newBoard);
 
-    // checks for the terminal states such as win, lose, and tie and returning a value accordingly
-    if (checkXorO(newBoard, huPlayer)) {
+    // Check if who win among human player and AI player or it is a draw
+    if (checkWinner(newBoard, huPlayer)) {
       return { score: -10 };
-    } else if (checkXorO(newBoard, aiPlayer)) {
+    } else if (checkWinner(newBoard, aiPlayer)) {
       return { score: 10 };
     } else if (availSpots.length === 0) {
       return { score: 0 };
     }
 
-    // an array to collect all the objects
-    var moves = [];
-
-    // loop through available spots
-    for (var i = 0; i < availSpots.length; i++) {
-      //create an object for each and store the index of that spot that was stored as a number in the object's index key
-      var move = {};
+    let moves = [];
+    for (let i = 0; i < availSpots.length; i++) {
+      let move = {};
       move.index = newBoard[availSpots[i]];
-
-      // set the empty spot to the current player
       newBoard[availSpots[i]] = player;
-
-      //if collect the score resulted from calling minimax on the opponent of the current player
       if (player == aiPlayer) {
-        var result = minimax(newBoard, huPlayer);
+        let result = minimax(newBoard, huPlayer);
         move.score = result.score;
       } else {
-        var result = minimax(newBoard, aiPlayer);
+        let result = minimax(newBoard, aiPlayer);
         move.score = result.score;
       }
-
-      //reset the spot to empty
       newBoard[availSpots[i]] = move.index;
-
-      // push the object to the array
       moves.push(move);
     }
-
-    // if it is the computer's turn loop over the moves and choose the move with the highest score
-    var bestMove;
+    let bestMove;
     if (player === aiPlayer) {
-      var bestScore = -10000;
-      for (var i = 0; i < moves.length; i++) {
+      let bestScore = -10000;
+      for (let i = 0; i < moves.length; i++) {
         if (moves[i].score > bestScore) {
           bestScore = moves[i].score;
           bestMove = i;
         }
       }
     } else {
-      // else loop over the moves and choose the move with the lowest score
-      var bestScore = 10000;
-      for (var i = 0; i < moves.length; i++) {
+      let bestScore = 10000;
+      for (let i = 0; i < moves.length; i++) {
         if (moves[i].score < bestScore) {
           bestScore = moves[i].score;
           bestMove = i;
         }
       }
     }
-
-    // return the chosen move (object) from the array to the higher depth
     return moves[bestMove];
-  }
-
-  // returns the available spots on the board
-  function emptyIndexies(board) {
-    return board.filter((s) => s != 'O' && s != 'X');
-  }
-
-  const addValueToCell = (index) => {
-    if (!winnerVal) {
-      setCellVals(() => {
-        let newCellVals = cellVals.map((val, i) =>
-          index === i ? (playerTurn === 0 ? 'X' : 'O') : val
-        );
-        let checkForX = checkXorO(newCellVals, 'X'),
-          checkForO = checkXorO(newCellVals, 'O');
-        if (
-          !newCellVals.join('').match(/\d/).length &&
-          !checkForO &&
-          !checkForX
-        ) {
-          setWinnerVal('draw');
-          setStatus([true, true]);
-        } else {
-          if (checkForX) {
-            setWinnerVal('X');
-            setStatus(xoro === 'X' ? [true, false] : [false, true]);
-            setPoints(
-              xoro === 'X'
-                ? [points[0] + 1, points[1]]
-                : [points[0], points[1] + 1]
-            );
-          }
-          if (checkForO) {
-            setWinnerVal('O');
-            setStatus(xoro === 'O' ? [true, false] : [false, true]);
-            setPoints(
-              xoro === 'O'
-                ? [points[0] + 1, points[1]]
-                : [points[0], points[1] + 1]
-            );
-          }
-        }
-        return newCellVals;
-      });
-      setPlayerTurn(playerTurn === 0 ? 1 : 0);
-      setCellChangeCount(cellChangeCount + 1);
-    }
   };
 
-  if (playerTurn === 1 && currentStep === 2 && playMode === 'single') {
-    setTimeout(singlePlayerAddCell, 1000);
-  }
+  const emptyIndexies = (board) =>
+    board.filter((s) => s != 'O' && s != 'X' && typeof s === 'number');
 
   const playAgain = () => {
-    setCellVals([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-    setCellChangeCount(0);
-    setWinnerVal('');
-    setStatus([false, false]);
-    setPlayerTurn(Math.floor(Math.random() * 2));
+    let newGameData = { ...gameData };
+    newGameData.cellVals = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    newGameData.winner = '';
+    newGameData.status = [false, false];
+    newGameData.playerTurn = Math.floor(Math.random() * 2);
+    setGameData(newGameData);
   };
 
   const reset = () => {
     setStep(0);
     setPlayMode('');
-    setXorO('');
-    setCellVals([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-    setCellChangeCount(0);
-    setWinnerVal('');
-    setStatus([false, false]);
-    setPlayerTurn(Math.floor(Math.random() * 2));
-    setPoints([0, 0]);
+    setPlayerSigns([]);
+    let newGameData = { ...gameData };
+    newGameData.cellVals = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    newGameData.winner = '';
+    newGameData.status = [false, false];
+    newGameData.playerTurn = Math.floor(Math.random() * 2);
+    newGameData.points = [0, 0];
+    setGameData(newGameData);
   };
 
   return (
     <main>
       <SwitchTransition mode='out-in'>
         <CSSTransition
-          key={currentStep}
+          key={step}
           addEndListener={(node, done) => {
             node.addEventListener('transitionend', done, false);
           }}
           classNames='slideIn'>
           <div>
             <Wrapper>
-              {currentStep == 0 ? (
+              {step == 0 ? (
                 <PlayMode choosePlayMode={choosePlayMode} />
-              ) : currentStep == 1 ? (
-                <XorO chooseXorO={chooseXorO} />
+              ) : step == 1 ? (
+                <XorO chooseSymbols={chooseSymbols} />
               ) : (
                 <Board
                   addValueToCell={addValueToCell}
                   playAgain={playAgain}
                   reset={reset}
                   playMode={playMode}
-                  cellVals={cellVals}
-                  status={status}
-                  playerTurn={playerTurn}
-                  player1Choice={xoro}
-                  points={points}
+                  cellVals={gameData.cellVals}
+                  status={gameData.status}
+                  playerTurn={gameData.playerTurn}
+                  points={gameData.points}
                 />
               )}
             </Wrapper>

@@ -3,15 +3,15 @@ import Button from '../components/Button';
 import X from '../components/X';
 import O from '../components/O';
 
-function XorO({ chooseXorO }) {
+function XorO({ chooseSymbols }) {
   return (
     <div className='tab'>
       <p>
         What would you like, <X /> 🥊 <O /> ?
       </p>
       <div className='btn_container'>
-        <Button text=' X ' click={() => chooseXorO('X')} />
-        <Button text=' O ' click={() => chooseXorO('O')} />
+        <Button text=' X ' click={() => chooseSymbols('X')} />
+        <Button text=' O ' click={() => chooseSymbols('O')} />
       </div>
     </div>
   );

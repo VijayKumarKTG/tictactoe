@@ -14,11 +14,9 @@ function Board({
   cellVals,
   status,
   playerTurn,
-  player1Choice,
   points,
 }) {
   let winStatus;
-  let xoro = playerTurn === 0 ? 'X' : 'O';
   if (playMode === 'single') {
     if (status[0] && !status[1]) {
       winStatus = <p className='status'>You beat the beast, Computer!</p>;
@@ -58,21 +56,14 @@ function Board({
       <Logo />
       {playMode === 'single' ? (
         <p>
-          <span className={xoro === player1Choice ? 'active' : null}>You</span>{' '}
-          Vs{' '}
-          <span className={xoro !== player1Choice ? 'active' : null}>
-            Computer
-          </span>
+          <span className={playerTurn === 0 ? 'active' : null}>You</span> Vs{' '}
+          <span className={playerTurn === 1 ? 'active' : null}>Computer</span>
         </p>
       ) : (
         <p>
-          <span className={xoro === player1Choice ? 'active' : null}>
-            Player 1
-          </span>{' '}
+          <span className={playerTurn === 0 ? 'active' : null}>Player 1</span>{' '}
           Vs{' '}
-          <span className={xoro !== player1Choice ? 'active' : null}>
-            Player 2
-          </span>
+          <span className={playerTurn === 1 ? 'active' : null}>Player 2</span>
         </p>
       )}
       <p>
@@ -87,7 +78,15 @@ function Board({
       {status.includes(true) && winStatus}
       <div className='board'>
         {cellVals.map((cellVal, i) => (
-          <Cell key={i} value={cellVal} addCellVal={() => addValueToCell(i)} />
+          <Cell
+            key={i}
+            value={cellVal}
+            addCellVal={() =>
+              playerTurn === 1 && playMode === 'single'
+                ? null
+                : addValueToCell(i)
+            }
+          />
         ))}
       </div>
       <div className='btn_container' style={{ marginTop: '20px' }}>
