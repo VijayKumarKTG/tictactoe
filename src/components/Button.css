@@ -1,9 +1,9 @@
 .button {
   font-family: 'Indie Flower';
   display: inline-block;
-  padding: 3px 10px;
+  padding: 7px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   color: black;
   background: #ffff7e;
   background: -moz-linear-gradient(94deg, #ffff7e 0%, #00a8c5 100%);
@@ -12,32 +12,9 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 1.3rem;
-  transition: transform 300ms ease-in;
+  transition: all 300ms ease-in;
 }
 
 .button:hover {
-  transform: scale(1.1);
-}
-
-.button:hover .text_border {
-  opacity: 1;
-}
-
-.text_border {
-  height: 3px;
-  background-color: aliceblue;
-  opacity: 0;
-  animation: grow-horizontal 300ms ease-out;
-}
-
-@keyframes grow-horizontal {
-  0% {
-    width: 0%;
-  }
-  50% {
-    width: 50%;
-  }
-  100% {
-    width: 100%;
-  }
+  box-shadow: -2px -2px 5px 2px #ffff0082, 2px 2px 5px 2px #00800075;
 }

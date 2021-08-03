@@ -7,7 +7,7 @@ function PlayMode({ choosePlayMode }) {
   return (
     <div className='tab'>
       <Logo />
-      <p>Welcome to your tic-tac-toe board! 👋</p>
+      <h2>Welcome to your tic-tac-toe board! 👋</h2>
       <p>Choose, single player or double player?</p>
       <div className='btn_container'>
         <Button text='Single player' click={() => choosePlayMode('single')} />

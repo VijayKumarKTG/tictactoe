@@ -2,10 +2,12 @@ import React from 'react';
 import Button from '../components/Button';
 import X from '../components/X';
 import O from '../components/O';
+import Logo from '../components/Logo';
 
 function XorO({ chooseSymbols }) {
   return (
     <div className='tab'>
+      <Logo />
       <p>
         What would you like, <X /> 🥊 <O /> ?
       </p>
