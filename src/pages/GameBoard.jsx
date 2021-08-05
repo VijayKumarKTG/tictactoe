@@ -14,9 +14,13 @@ function Board({
   cellVals,
   status,
   playerTurn,
+  playersSign,
   points,
 }) {
   let winStatus;
+  let xSign = playersSign[0] === 'X' ? <X /> : <O />,
+    oSign = playersSign[1] === 'X' ? <X /> : <O />;
+
   if (playMode === 'single') {
     if (status[0] && !status[1]) {
       winStatus = <p className='status'>You beat the beast, Computer!</p>;
@@ -55,26 +59,38 @@ function Board({
     <div className='tab board_container'>
       <Logo />
       {playMode === 'single' ? (
-        <p>
-          <span className={playerTurn === 0 ? 'active' : null}>You</span> Vs{' '}
-          <span className={playerTurn === 1 ? 'active' : null}>Computer</span>
-        </p>
+        <div className='points'>
+          <div>
+            <p className={playerTurn === 0 ? 'active' : null}>You</p>
+            <p>
+              {xSign} : {points[0]}
+            </p>
+          </div>
+          <div>🥊</div>
+          <div>
+            <p className={playerTurn === 1 ? 'active' : null}>Computer</p>
+            <p>
+              {oSign} : {points[1]}
+            </p>
+          </div>
+        </div>
       ) : (
-        <p>
-          <span className={playerTurn === 0 ? 'active' : null}>Player 1</span>{' '}
-          Vs{' '}
-          <span className={playerTurn === 1 ? 'active' : null}>Player 2</span>
-        </p>
+        <div className='points'>
+          <div>
+            <p className={playerTurn === 0 ? 'active' : null}>Player 1</p>
+            <p>
+              {xSign} : {points[0]}
+            </p>
+          </div>
+          <div>🥊</div>
+          <div>
+            <p className={playerTurn === 1 ? 'active' : null}>Player 2</p>
+            <p>
+              {oSign} : {points[1]}
+            </p>
+          </div>
+        </div>
       )}
-      <p>
-        <span>
-          <X /> : {points[0]}
-        </span>{' '}
-        🥊{' '}
-        <span>
-          <O /> : {points[1]}
-        </span>
-      </p>
       {status.includes(true) && winStatus}
       <div className='board'>
         {cellVals.map((cellVal, i) => (

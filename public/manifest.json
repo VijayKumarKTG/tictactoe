@@ -1,0 +1,37 @@
+{
+  "short_name": "Tic Tac Toe",
+  "name": "Tic Tac Toe",
+  "description": "Let's play Tic Tac Toe",
+  "icons": [
+    {
+      "src": "/images/icon128.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon193.png",
+      "type": "image/png",
+      "sizes": "193x193"
+    },
+    {
+      "src": "/images/icon256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/images/icon384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "/images/icon512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "http://localhost:5000/",
+  "background_color": "#272727",
+  "display": "fullscreen",
+  "theme_color": "#272727"
+}

@@ -204,6 +204,7 @@ function App() {
                   status={gameData.status}
                   playerTurn={gameData.playerTurn}
                   points={gameData.points}
+                  playersSign={playersSign}
                 />
               )}
             </Wrapper>

@@ -2,6 +2,7 @@
   font-size: xx-large;
   font-weight: bold;
   border: none;
+  width: 70%;
 }
 
 .board {
@@ -16,4 +17,11 @@
 
 .active {
   border-bottom: 2px solid #ffffff;
+}
+
+.points {
+  display: grid;
+  grid-template-columns: 40% 10% 40%;
+  justify-content: space-between;
+  align-items: center;
 }
